@@ -4,10 +4,13 @@
     - name
     - email
     - state
-        - _id
-        - name
     - passwordHash
     - token
+
+# State
+
+    - _id
+    - name
 
 # Categories
 

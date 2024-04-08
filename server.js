@@ -20,9 +20,7 @@ server.use(fileUpload());
 
 server.use(express.static(__dirname + "/public"));
 
-server.get("/ping", (req, res) => {
-  res.json({ pong: true });
-});
+server.use("/", apiRoutes);
 
 server.listen(process.env.PORT, () => {
   console.log(`Server running on port: ${process.env.BASE}`);
