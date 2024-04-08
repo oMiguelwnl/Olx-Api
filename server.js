@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
+const apiRoutes = require("./src/routes");
 
 mongoose.connect(process.env.DATABASE);
 

@@ -8,16 +8,16 @@ router.get("/ping", (req, res) => {
   res.json({ pong: true });
 });
 
-router.get("states", UserController.getStates);
+router.get("/states", UserController.getStates);
 router.get("/user/me", UserController.info);
 router.put("/user/me", UserController.editAction);
 
 router.post("/user/signin", AuthController.signin);
-router.post("/user/signup", AuthController.singup);
+router.post("/user/signup", AuthController.signup);
 
-router.get("/ad/add", AdsController.addAction);
+router.post("/ad/add", AdsController.addAction);
 router.post("/ad/list", AdsController.getList);
-router.get("ad/item", AdsController.getItem);
-router.post("/ad/:id", AdsController.editAction);
+router.get("/ad/item", AdsController.getItem);
+router.put("/ad/:id", AdsController.editAction);
 
 module.exports = router;
