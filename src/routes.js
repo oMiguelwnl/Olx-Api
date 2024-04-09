@@ -16,8 +16,8 @@ router.get("/states", UserController.getStates);
 router.get("/user/me", Auth.private, UserController.info);
 router.put("/user/me", Auth.private, UserController.editAction);
 
-router.post("/user/signin", AuthValidator.signup, AuthController.signin);
-router.post("/user/signup", AuthController.signup);
+router.post("/user/signin", AuthValidator.signin, AuthController.signin);
+router.post("/user/signup", AuthValidator.signup, AuthController.signup);
 
 router.post("/ad/add", Auth.private, AdsController.addAction);
 router.post("/ad/list", AdsController.getList);
