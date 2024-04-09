@@ -3,21 +3,23 @@ const router = express.Router();
 const AuthController = require("./controllers/AuthController");
 const AdsController = require("./controllers/AdsController");
 const UserController = require("./controllers/UserController");
+const Auth = require("./middlewares/Auth");
 
 router.get("/ping", (req, res) => {
   res.json({ pong: true });
 });
 
 router.get("/states", UserController.getStates);
-router.get("/user/me", UserController.info);
-router.put("/user/me", UserController.editAction);
+
+router.get("/user/me", Auth.private, UserController.info);
+router.put("/user/me", Auth.private, UserController.editAction);
 
 router.post("/user/signin", AuthController.signin);
 router.post("/user/signup", AuthController.signup);
 
-router.post("/ad/add", AdsController.addAction);
+router.post("/ad/add", Auth.private, AdsController.addAction);
 router.post("/ad/list", AdsController.getList);
 router.get("/ad/item", AdsController.getItem);
-router.put("/ad/:id", AdsController.editAction);
+router.put("/ad/:id", Auth.private, AdsController.editAction);
 
 module.exports = router;
