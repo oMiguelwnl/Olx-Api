@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   Category: String,
   images: [Object],
   dateCreated: Date,
-  title: string,
+  title: String,
   price: Number,
   priceNegotiate: Boolean,
   description: String,
