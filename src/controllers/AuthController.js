@@ -1,38 +1,33 @@
-const { validationResult, matchedData } = require("express-validator");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const { validationResult, matchedData } = require("express-validator");
 
 const User = require("../models/User");
 const State = require("../models/State");
 
 module.exports = {
   signin: async (req, res) => {
-    // Validar os dados
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.json({ errors: errors.mapped() });
+      res.json({ error: errors.mapped() });
       return;
     }
     const data = matchedData(req);
 
-    // Validação do Email
-    const user = await User.findOne({
-      email: data.email,
-    });
-
+    // Validando o e-mail
+    const user = await User.findOne({ email: data.email });
     if (!user) {
-      res.json({ error: "Email e/ou senha inválidos" });
+      res.json({ error: "E-mail e/ou senha errados!" });
       return;
     }
 
-    // Validação da Senha
+    // Validando a senha
     const match = await bcrypt.compare(data.password, user.passwordHash);
     if (!match) {
-      res.json({ error: "Email e/ou senha inválidos" });
+      res.json({ error: "E-mail e/ou senha errados!" });
       return;
     }
 
-    // Gerar o Token
     const payload = (Date.now() + Math.random()).toString();
     const token = await bcrypt.hash(payload, 10);
 
@@ -42,38 +37,40 @@ module.exports = {
     res.json({ token, email: data.email });
   },
   signup: async (req, res) => {
-    // Validar os dados
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.json({ errors: errors.mapped() });
+      res.json({ error: errors.mapped() });
       return;
     }
     const data = matchedData(req);
 
-    // Verificar se o email existe
+    // Verificando se e-mail já existe
     const user = await User.findOne({
       email: data.email,
     });
-
     if (user) {
-      res.json({ error: { email: { msg: "Email ja existe" } } });
+      res.json({
+        error: { email: { msg: "E-mail já existe!" } },
+      });
       return;
     }
 
-    // Verificar se o estado existe
+    // Verificando se o estado existe
     if (mongoose.Types.ObjectId.isValid(data.state)) {
       const stateItem = await State.findById(data.state);
-
       if (!stateItem) {
-        res.json({ error: { state: { msg: "Estado inexistente" } } });
+        res.json({
+          error: { state: { msg: "Estado não existe" } },
+        });
         return;
       }
     } else {
-      res.json({ error: { state: { msg: "Código de estado inválido" } } });
+      res.json({
+        error: { state: { msg: "Código de estado inválido" } },
+      });
       return;
     }
 
-    // Criar o novo usuário
     const passwordHash = await bcrypt.hash(data.password, 10);
 
     const payload = (Date.now() + Math.random()).toString();
@@ -86,7 +83,6 @@ module.exports = {
       token,
       state: data.state,
     });
-
     await newUser.save();
 
     res.json({ token });
